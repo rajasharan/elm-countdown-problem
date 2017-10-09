@@ -15,7 +15,7 @@ model =
   , input4 = 10
   , input5 = 25
   , input6 = 50
-  , target = 76
+  , target = 765
   , result = []
   }
 
