@@ -11028,7 +11028,7 @@ var _rajasharan$elm_countdown_problem$Main$model = {
 	input4: 10,
 	input5: 25,
 	input6: 50,
-	target: 76,
+	target: 765,
 	result: {ctor: '[]'}
 };
 var _rajasharan$elm_countdown_problem$Main$main = _elm_lang$html$Html$beginnerProgram(
