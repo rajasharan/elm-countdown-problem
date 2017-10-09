@@ -12,6 +12,7 @@ type alias Model =
   , input5 : Int
   , input6 : Int
   , target : Int
+  , isLoading : Bool
   , result : List String
   }
 
@@ -24,5 +25,8 @@ type Msg =
   | Input6 String
   | Target String
   | Evaluate
+  | Delay ()
+  | StartLoading ()
+  | StopLoading ()
 
 

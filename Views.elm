@@ -1,7 +1,7 @@
 module Views exposing (..)
 
 import Html exposing (Html, button, div, text, section, h1, ul, li, strong, span, a, i, input, pre, code)
-import Html.Attributes exposing (class, target, href, title, placeholder, type_, value)
+import Html.Attributes exposing (class, target, href, title, placeholder, type_, value, disabled)
 import Html.Events exposing (onClick, onInput)
 import Maybe exposing (withDefault)
 import List exposing (concatMap, range, length, head, isEmpty, concat, filter, map, map2, member)
@@ -114,6 +114,9 @@ userinput model =
 
 evaluateSection : Model -> Html Msg
 evaluateSection model =
+  let
+      isLoading = if model.isLoading then " is-loading" else ""
+  in
   section []
     [ div [ class "columns notification" ]
       [ div [ class "column" ]
@@ -121,7 +124,7 @@ evaluateSection model =
           [ text "Enter target num " , strong [] [ text "greater than 0 " ] , text "below."
           , div [ class "field has-addons" ]
             [ div [ class "control" ]
-              [ a [ class "button is-info is-large is-info", onClick Evaluate ]
+              [ a [ class <| "button is-info is-large" ++ isLoading, onClick Evaluate, disabled model.isLoading ]
                 [ text "Evaluate" ]
               ]
             , div [ class "control" ]
@@ -136,10 +139,7 @@ evaluateSection model =
 
 resultsection : Model -> Html Msg
 resultsection model =
-  let
-      results = [] --map print <| findR 76
-  in
-      section [] <| map (precode model) model.result
+  section [] <| map precode model.result
         
-precode : Model -> String -> Html Msg
-precode model str = pre [] [ code [] [text str] ]
+precode : String -> Html Msg
+precode str = pre [] [ code [] [text str] ]
