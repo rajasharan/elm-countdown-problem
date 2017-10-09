@@ -3,122 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Main</title>
+        <title>elm-countdown-problem</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.3/css/bulma.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="main.js"></script>
     </head>
     <body>
-      <section class="hero is-primary">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title">
-              The Countdown Problem
-            </h1>
-            <div class="subtitle content">
-              <ul>
-                <li>Pick 6 numbers greater than 0</li>
-                <li>Pick a target numbers greater than 0</li>
-                <li>Find all expressions that lead to target using operators <strong>+ - x /</strong></li>
-                <li>All sub-expressions should be numbers greater than 0</li>
-                <li>Inspired by <strong>Graham Huttons</strong> paper
-                  <span class="icon">
-                    <a target="_blank" href="http://www.cs.nott.ac.uk/~pszgmh/countdown.pdf" title="The countdown problem pdf paper "><i class="fa fa-external-link"></i></a>
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="notification">
-          <div class="notification">
-            Enter numbers <strong>greater than 0</strong> below.
-
-            <div class="columns">
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" value="3" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" value="7" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" value="10" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" value="25" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="column is-narrow is-2">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" value="50" placeholder=">0">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <section>
-          <div class="columns notification">
-            <div class="column">
-              <div class="notification">
-
-                Enter target num <strong>greater than 0</strong> below.
-                <div class="field has-addons">
-                  <div class="control">
-                    <a class="button is-info is-large is-info">Evaluate</a>
-                  </div>
-
-                  <div class="control">
-                    <input class="input is-large" type="text" placeholder="target #" value="765">
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-      </section>
-
-      <section>
-        <pre><code> ((1 + 50) * (25 - 10)) </code></pre>
-        <pre><code> ((1 + 50) * (25 - 10)) </code></pre>
-        <pre><code> ((1 + 50) * (25 - 10)) </code></pre>
-        <pre><code> ((1 + 50) * (25 - 10)) </code></pre>
-      </section>
-
       <script type="text/javascript">Elm.Main.fullscreen()</script>
     </body>
 </html>
