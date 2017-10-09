@@ -2,7 +2,7 @@ module Views exposing (..)
 
 import Html exposing (Html, button, div, text, section, h1, ul, li, strong, span, a, i, input, pre, code)
 import Html.Attributes exposing (class, target, href, title, placeholder, type_, value)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Maybe exposing (withDefault)
 import List exposing (concatMap, range, length, head, isEmpty, concat, filter, map, map2, member)
 import List.Extra exposing (andThen, splitAt, permutations, subsequences)
@@ -26,7 +26,7 @@ header model =
             [ li []
               [ text "Pick 6 numbers greater than 0" ]
             , li []
-              [ text "Pick a target numbers greater than 0" ]
+              [ text "Pick a target number greater than 0" ]
             , li []
               [ text "Find all expressions that lead to target using operators "
               , strong []
@@ -35,7 +35,7 @@ header model =
             , li []
               [ text "All sub-expressions should be numbers greater than 0" ]
             , li []
-              [ text "Inspired by ", strong [] [text "Graham Huttons "], text "paper "
+              [ text "Inspired by ", strong [] [text "Graham Hutton's "], text "paper "
               , span [ class "icon" ]
                 [ a [ href "http://www.cs.nott.ac.uk/~pszgmh/countdown.pdf", target "_blank", title "The countdown problem pdf paper" ]
                   [i [ class "fa fa-external-link" ] []]
@@ -52,12 +52,12 @@ userinput model =
   section []
     [ div [ class "notification" ]
       [ div [ class "notification" ]
-        [ text "Enter numbers " , strong [] [text "greater than 0 "] , text "below.            "
+        [ text "Enter numbers " , strong [] [text "greater than 0 "] , text "below."
         , div [class "columns"]
           [ div [class "column is-narrow is-2"]
             [ div [class "field"]
               [ div [class "control"]
-                [ input [class "input is-large", placeholder ">0", value "1", type_ "text"]
+                [ input [class "input is-large", placeholder ">0", type_ "number", value <| toString model.input1, onInput Input1]
                   []
                 ]
               ]
@@ -66,7 +66,7 @@ userinput model =
           , div [ class "column is-narrow is-2" ]
             [ div [ class "field" ]
               [ div [ class "control" ]
-                [ input [ class "input is-large", placeholder ">0", type_ "text", value "3" ]
+                [ input [ class "input is-large", placeholder ">0", type_ "number", value <| toString model.input2, onInput Input2 ]
                   []
                 ]
               ]
@@ -75,7 +75,7 @@ userinput model =
           , div [ class "column is-narrow is-2" ]
             [ div [ class "field" ]
               [ div [ class "control" ]
-                [ input [ class "input is-large", placeholder ">0", type_ "text", value "7" ]
+                [ input [ class "input is-large", placeholder ">0", type_ "number", value <| toString model.input3, onInput Input3 ]
                   []
                 ]
               ]
@@ -84,7 +84,7 @@ userinput model =
           , div [ class "column is-narrow is-2" ]
             [ div [ class "field" ]
               [ div [ class "control" ]
-                [ input [ class "input is-large", placeholder ">0", type_ "text", value "10" ]
+                [ input [ class "input is-large", placeholder ">0", type_ "number", value <| toString model.input4, onInput Input4 ]
                   []
                 ]
               ]
@@ -93,7 +93,7 @@ userinput model =
           , div [ class "column is-narrow is-2" ]
             [ div [ class "field" ]
               [ div [ class "control" ]
-                [ input [ class "input is-large", placeholder ">0", type_ "text", value "25" ]
+                [ input [ class "input is-large", placeholder ">0", type_ "number", value <| toString model.input5, onInput Input5 ]
                   []
                 ]
               ]
@@ -102,7 +102,7 @@ userinput model =
           , div [ class "column is-narrow is-2" ]
             [ div [ class "field" ]
               [ div [ class "control" ]
-                [ input [ class "input is-large", placeholder ">0", type_ "text", value "50" ]
+                [ input [ class "input is-large", placeholder ">0", type_ "number", value <| toString model.input6, onInput Input6 ]
                   []
                 ]
               ]
@@ -121,11 +121,11 @@ evaluateSection model =
           [ text "Enter target num " , strong [] [ text "greater than 0 " ] , text "below."
           , div [ class "field has-addons" ]
             [ div [ class "control" ]
-              [ a [ class "button is-info is-large is-info" ]
+              [ a [ class "button is-info is-large is-info", onClick Evaluate ]
                 [ text "Evaluate" ]
               ]
             , div [ class "control" ]
-              [ input [ class "input is-large", placeholder "target #", type_ "text", value "765" ]
+              [ input [ class "input is-large", placeholder "target #", type_ "number", value <| toString model.target, onInput Target]
                 []
               ]
             ]
@@ -137,9 +137,9 @@ evaluateSection model =
 resultsection : Model -> Html Msg
 resultsection model =
   let
-      results = map print <| findR 76
+      results = [] --map print <| findR 76
   in
-      section [] <| map (precode model) results
+      section [] <| map (precode model) model.result
         
 precode : Model -> String -> Html Msg
 precode model str = pre [] [ code [] [text str] ]
