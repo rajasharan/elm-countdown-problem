@@ -6446,6 +6446,418 @@ var _elm_lang$core$Array$repeat = F2(
 	});
 var _elm_lang$core$Array$Array = {ctor: 'Array'};
 
+var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
+var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
+var _elm_lang$core$Task$spawnCmd = F2(
+	function (router, _p0) {
+		var _p1 = _p0;
+		return _elm_lang$core$Native_Scheduler.spawn(
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
+	});
+var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
+var _elm_lang$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			_elm_lang$core$Task$onError,
+			function (_p2) {
+				return _elm_lang$core$Task$fail(
+					convert(_p2));
+			},
+			task);
+	});
+var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return _elm_lang$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return _elm_lang$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map3 = F4(
+	function (func, taskA, taskB, taskC) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return _elm_lang$core$Task$succeed(
+									A3(func, a, b, c));
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map4 = F5(
+	function (func, taskA, taskB, taskC, taskD) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return _elm_lang$core$Task$succeed(
+											A4(func, a, b, c, d));
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map5 = F6(
+	function (func, taskA, taskB, taskC, taskD, taskE) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Task$andThen,
+											function (e) {
+												return _elm_lang$core$Task$succeed(
+													A5(func, a, b, c, d, e));
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$sequence = function (tasks) {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Task$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
+	}
+};
+var _elm_lang$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			_elm_lang$core$Task$map,
+			function (_p4) {
+				return {ctor: '_Tuple0'};
+			},
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Task$spawnCmd(router),
+					commands)));
+	});
+var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
+	{ctor: '_Tuple0'});
+var _elm_lang$core$Task$onSelfMsg = F3(
+	function (_p7, _p6, _p5) {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '_Tuple0'});
+	});
+var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
+};
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(
+					_elm_lang$core$Task$onError,
+					function (_p8) {
+						return _elm_lang$core$Task$succeed(
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
+	});
+var _elm_lang$core$Task$cmdMap = F2(
+	function (tagger, _p10) {
+		var _p11 = _p10;
+		return _elm_lang$core$Task$Perform(
+			A2(_elm_lang$core$Task$map, tagger, _p11._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
+//import Native.Scheduler //
+
+var _elm_lang$core$Native_Time = function() {
+
+var now = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+{
+	callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
+});
+
+function setInterval_(interval, task)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var id = setInterval(function() {
+			_elm_lang$core$Native_Scheduler.rawSpawn(task);
+		}, interval);
+
+		return function() { clearInterval(id); };
+	});
+}
+
+return {
+	now: now,
+	setInterval_: F2(setInterval_)
+};
+
+}();
+var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
+var _elm_lang$core$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		var _p0 = intervals;
+		if (_p0.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(processes);
+		} else {
+			var _p1 = _p0._0;
+			var spawnRest = function (id) {
+				return A3(
+					_elm_lang$core$Time$spawnHelp,
+					router,
+					_p0._1,
+					A3(_elm_lang$core$Dict$insert, _p1, id, processes));
+			};
+			var spawnTimer = _elm_lang$core$Native_Scheduler.spawn(
+				A2(
+					_elm_lang$core$Time$setInterval,
+					_p1,
+					A2(_elm_lang$core$Platform$sendToSelf, router, _p1)));
+			return A2(_elm_lang$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var _elm_lang$core$Time$addMySub = F2(
+	function (_p2, state) {
+		var _p3 = _p2;
+		var _p6 = _p3._1;
+		var _p5 = _p3._0;
+		var _p4 = A2(_elm_lang$core$Dict$get, _p5, state);
+		if (_p4.ctor === 'Nothing') {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{
+					ctor: '::',
+					_0: _p6,
+					_1: {ctor: '[]'}
+				},
+				state);
+		} else {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{ctor: '::', _0: _p6, _1: _p4._0},
+				state);
+		}
+	});
+var _elm_lang$core$Time$inMilliseconds = function (t) {
+	return t;
+};
+var _elm_lang$core$Time$millisecond = 1;
+var _elm_lang$core$Time$second = 1000 * _elm_lang$core$Time$millisecond;
+var _elm_lang$core$Time$minute = 60 * _elm_lang$core$Time$second;
+var _elm_lang$core$Time$hour = 60 * _elm_lang$core$Time$minute;
+var _elm_lang$core$Time$inHours = function (t) {
+	return t / _elm_lang$core$Time$hour;
+};
+var _elm_lang$core$Time$inMinutes = function (t) {
+	return t / _elm_lang$core$Time$minute;
+};
+var _elm_lang$core$Time$inSeconds = function (t) {
+	return t / _elm_lang$core$Time$second;
+};
+var _elm_lang$core$Time$now = _elm_lang$core$Native_Time.now;
+var _elm_lang$core$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _p7 = A2(_elm_lang$core$Dict$get, interval, state.taggers);
+		if (_p7.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var tellTaggers = function (time) {
+				return _elm_lang$core$Task$sequence(
+					A2(
+						_elm_lang$core$List$map,
+						function (tagger) {
+							return A2(
+								_elm_lang$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						_p7._0));
+			};
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p8) {
+					return _elm_lang$core$Task$succeed(state);
+				},
+				A2(_elm_lang$core$Task$andThen, tellTaggers, _elm_lang$core$Time$now));
+		}
+	});
+var _elm_lang$core$Time$subscription = _elm_lang$core$Native_Platform.leaf('Time');
+var _elm_lang$core$Time$State = F2(
+	function (a, b) {
+		return {taggers: a, processes: b};
+	});
+var _elm_lang$core$Time$init = _elm_lang$core$Task$succeed(
+	A2(_elm_lang$core$Time$State, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty));
+var _elm_lang$core$Time$onEffects = F3(
+	function (router, subs, _p9) {
+		var _p10 = _p9;
+		var rightStep = F3(
+			function (_p12, id, _p11) {
+				var _p13 = _p11;
+				return {
+					ctor: '_Tuple3',
+					_0: _p13._0,
+					_1: _p13._1,
+					_2: A2(
+						_elm_lang$core$Task$andThen,
+						function (_p14) {
+							return _p13._2;
+						},
+						_elm_lang$core$Native_Scheduler.kill(id))
+				};
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _p15) {
+				var _p16 = _p15;
+				return {
+					ctor: '_Tuple3',
+					_0: _p16._0,
+					_1: A3(_elm_lang$core$Dict$insert, interval, id, _p16._1),
+					_2: _p16._2
+				};
+			});
+		var leftStep = F3(
+			function (interval, taggers, _p17) {
+				var _p18 = _p17;
+				return {
+					ctor: '_Tuple3',
+					_0: {ctor: '::', _0: interval, _1: _p18._0},
+					_1: _p18._1,
+					_2: _p18._2
+				};
+			});
+		var newTaggers = A3(_elm_lang$core$List$foldl, _elm_lang$core$Time$addMySub, _elm_lang$core$Dict$empty, subs);
+		var _p19 = A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			_p10.processes,
+			{
+				ctor: '_Tuple3',
+				_0: {ctor: '[]'},
+				_1: _elm_lang$core$Dict$empty,
+				_2: _elm_lang$core$Task$succeed(
+					{ctor: '_Tuple0'})
+			});
+		var spawnList = _p19._0;
+		var existingDict = _p19._1;
+		var killTask = _p19._2;
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (newProcesses) {
+				return _elm_lang$core$Task$succeed(
+					A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				_elm_lang$core$Task$andThen,
+				function (_p20) {
+					return A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var _elm_lang$core$Time$Every = F2(
+	function (a, b) {
+		return {ctor: 'Every', _0: a, _1: b};
+	});
+var _elm_lang$core$Time$every = F2(
+	function (interval, tagger) {
+		return _elm_lang$core$Time$subscription(
+			A2(_elm_lang$core$Time$Every, interval, tagger));
+	});
+var _elm_lang$core$Time$subMap = F2(
+	function (f, _p21) {
+		var _p22 = _p21;
+		return A2(
+			_elm_lang$core$Time$Every,
+			_p22._0,
+			function (_p23) {
+				return f(
+					_p22._1(_p23));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
+
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_Json = function() {
@@ -7095,6 +7507,10 @@ var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive(
 var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
 var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
+
+var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
+var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
+var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
 
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
@@ -9599,9 +10015,9 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _rajasharan$elm_countdown_problem$Types$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {input1: a, input2: b, input3: c, input4: d, input5: e, input6: f, target: g, result: h};
+var _rajasharan$elm_countdown_problem$Types$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {input1: a, input2: b, input3: c, input4: d, input5: e, input6: f, target: g, isLoading: h, result: i};
 	});
 var _rajasharan$elm_countdown_problem$Types$Div = {ctor: 'Div'};
 var _rajasharan$elm_countdown_problem$Types$Mul = {ctor: 'Mul'};
@@ -9613,6 +10029,15 @@ var _rajasharan$elm_countdown_problem$Types$App = F3(
 	});
 var _rajasharan$elm_countdown_problem$Types$Val = function (a) {
 	return {ctor: 'Val', _0: a};
+};
+var _rajasharan$elm_countdown_problem$Types$StopLoading = function (a) {
+	return {ctor: 'StopLoading', _0: a};
+};
+var _rajasharan$elm_countdown_problem$Types$StartLoading = function (a) {
+	return {ctor: 'StartLoading', _0: a};
+};
+var _rajasharan$elm_countdown_problem$Types$Delay = function (a) {
+	return {ctor: 'Delay', _0: a};
 };
 var _rajasharan$elm_countdown_problem$Types$Evaluate = {ctor: 'Evaluate'};
 var _rajasharan$elm_countdown_problem$Types$Target = function (a) {
@@ -10126,35 +10551,31 @@ var _rajasharan$elm_countdown_problem$Utils$solutionsR = F2(
 	});
 var _rajasharan$elm_countdown_problem$Utils$findR = _rajasharan$elm_countdown_problem$Utils$solutionsR(_rajasharan$elm_countdown_problem$Utils$inputs);
 
-var _rajasharan$elm_countdown_problem$Views$precode = F2(
-	function (model, str) {
-		return A2(
-			_elm_lang$html$Html$pre,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$code,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(str),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
-	});
+var _rajasharan$elm_countdown_problem$Views$precode = function (str) {
+	return A2(
+		_elm_lang$html$Html$pre,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$code,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(str),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
 var _rajasharan$elm_countdown_problem$Views$resultsection = function (model) {
-	var results = {ctor: '[]'};
 	return A2(
 		_elm_lang$html$Html$section,
 		{ctor: '[]'},
-		A2(
-			_elm_lang$core$List$map,
-			_rajasharan$elm_countdown_problem$Views$precode(model),
-			model.result));
+		A2(_elm_lang$core$List$map, _rajasharan$elm_countdown_problem$Views$precode, model.result));
 };
 var _rajasharan$elm_countdown_problem$Views$evaluateSection = function (model) {
+	var isLoading = model.isLoading ? ' is-loading' : '';
 	return A2(
 		_elm_lang$html$Html$section,
 		{ctor: '[]'},
@@ -10225,11 +10646,16 @@ var _rajasharan$elm_countdown_problem$Views$evaluateSection = function (model) {
 																	_elm_lang$html$Html$a,
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$class('button is-info is-large is-info'),
+																		_0: _elm_lang$html$Html_Attributes$class(
+																			A2(_elm_lang$core$Basics_ops['++'], 'button is-info is-large', isLoading)),
 																		_1: {
 																			ctor: '::',
 																			_0: _elm_lang$html$Html_Events$onClick(_rajasharan$elm_countdown_problem$Types$Evaluate),
-																			_1: {ctor: '[]'}
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$disabled(model.isLoading),
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	},
 																	{
@@ -10972,55 +11398,124 @@ var _rajasharan$elm_countdown_problem$Main$update = F2(
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'Input1':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input1: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input1)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input1: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input1)
+						}),
+					{ctor: '[]'});
 			case 'Input2':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input2: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input2)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input2: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input2)
+						}),
+					{ctor: '[]'});
 			case 'Input3':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input3: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input3)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input3: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input3)
+						}),
+					{ctor: '[]'});
 			case 'Input4':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input4: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input4)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input4: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input4)
+						}),
+					{ctor: '[]'});
 			case 'Input5':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input5: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input5)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input5: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input5)
+						}),
+					{ctor: '[]'});
 			case 'Input6':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						input6: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input6)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input6: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.input6)
+						}),
+					{ctor: '[]'});
 			case 'Target':
-				return _elm_lang$core$Native_Utils.update(
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							target: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.target)
+						}),
+					{ctor: '[]'});
+			case 'Evaluate':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{isLoading: true}),
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Task$perform,
+							_rajasharan$elm_countdown_problem$Types$Delay,
+							_elm_lang$core$Process$sleep(_elm_lang$core$Time$millisecond * 500)),
+						_1: {ctor: '[]'}
+					});
+			case 'Delay':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
 					{
-						target: A2(_rajasharan$elm_countdown_problem$Main$toInt, _p0._0, model.target)
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Task$perform,
+							_rajasharan$elm_countdown_problem$Types$StartLoading,
+							_elm_lang$core$Task$succeed(
+								{ctor: '_Tuple0'})),
+						_1: {ctor: '[]'}
+					});
+			case 'StartLoading':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							result: _rajasharan$elm_countdown_problem$Main$evaluate(model)
+						}),
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Task$perform,
+							_rajasharan$elm_countdown_problem$Types$StopLoading,
+							_elm_lang$core$Task$succeed(
+								{ctor: '_Tuple0'})),
+						_1: {ctor: '[]'}
 					});
 			default:
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						result: _rajasharan$elm_countdown_problem$Main$evaluate(model)
-					});
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{isLoading: false}),
+					{ctor: '[]'});
 		}
 	});
+var _rajasharan$elm_countdown_problem$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
 var _rajasharan$elm_countdown_problem$Main$model = {
 	input1: 1,
 	input2: 3,
@@ -11029,10 +11524,15 @@ var _rajasharan$elm_countdown_problem$Main$model = {
 	input5: 25,
 	input6: 50,
 	target: 765,
+	isLoading: false,
 	result: {ctor: '[]'}
 };
-var _rajasharan$elm_countdown_problem$Main$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _rajasharan$elm_countdown_problem$Main$model, view: _rajasharan$elm_countdown_problem$Views$view, update: _rajasharan$elm_countdown_problem$Main$update})();
+var _rajasharan$elm_countdown_problem$Main$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	_rajasharan$elm_countdown_problem$Main$model,
+	{ctor: '[]'});
+var _rajasharan$elm_countdown_problem$Main$main = _elm_lang$html$Html$program(
+	{init: _rajasharan$elm_countdown_problem$Main$init, view: _rajasharan$elm_countdown_problem$Views$view, update: _rajasharan$elm_countdown_problem$Main$update, subscriptions: _rajasharan$elm_countdown_problem$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
