@@ -23,5 +23,5 @@ $ lite-server
 # Navigate to .html file where the local server is deployed
 ```
 
-### [License](/LICENSE)
+### [License](https://github.com/rajasharan/elm-countdown-problem/blob/master/LICENSE)
 The MIT License (MIT)
