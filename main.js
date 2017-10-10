@@ -10015,10 +10015,27 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _rajasharan$elm_countdown_problem$Types$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {input1: a, input2: b, input3: c, input4: d, input5: e, input6: f, target: g, isLoading: h, result: i};
-	});
+var _rajasharan$elm_countdown_problem$Types$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {input1: a, input2: b, input3: c, input4: d, input5: e, input6: f, target: g, isLoading: h, results: i, error: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _rajasharan$elm_countdown_problem$Types$Div = {ctor: 'Div'};
 var _rajasharan$elm_countdown_problem$Types$Mul = {ctor: 'Mul'};
 var _rajasharan$elm_countdown_problem$Types$Sub = {ctor: 'Sub'};
@@ -10551,6 +10568,20 @@ var _rajasharan$elm_countdown_problem$Utils$solutionsR = F2(
 	});
 var _rajasharan$elm_countdown_problem$Utils$findR = _rajasharan$elm_countdown_problem$Utils$solutionsR(_rajasharan$elm_countdown_problem$Utils$inputs);
 
+var _rajasharan$elm_countdown_problem$Views$errorsection = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('notification is-danger title content'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(model.error),
+			_1: {ctor: '[]'}
+		});
+};
 var _rajasharan$elm_countdown_problem$Views$precode = function (str) {
 	return A2(
 		_elm_lang$html$Html$pre,
@@ -10569,13 +10600,20 @@ var _rajasharan$elm_countdown_problem$Views$precode = function (str) {
 		});
 };
 var _rajasharan$elm_countdown_problem$Views$resultsection = function (model) {
+	var results = (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$String$length(model.error),
+		0) > 0) ? {
+		ctor: '::',
+		_0: _rajasharan$elm_countdown_problem$Views$errorsection(model),
+		_1: {ctor: '[]'}
+	} : A2(_elm_lang$core$List$map, _rajasharan$elm_countdown_problem$Views$precode, model.results);
 	return A2(
 		_elm_lang$html$Html$section,
 		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _rajasharan$elm_countdown_problem$Views$precode, model.result));
+		results);
 };
 var _rajasharan$elm_countdown_problem$Views$evaluateSection = function (model) {
-	var isLoading = model.isLoading ? ' is-loading' : '';
+	var isLoading = model.isLoading ? ' is-loading is-warning' : ' is-info';
 	return A2(
 		_elm_lang$html$Html$section,
 		{ctor: '[]'},
@@ -10647,7 +10685,7 @@ var _rajasharan$elm_countdown_problem$Views$evaluateSection = function (model) {
 																	{
 																		ctor: '::',
 																		_0: _elm_lang$html$Html_Attributes$class(
-																			A2(_elm_lang$core$Basics_ops['++'], 'button is-info is-large', isLoading)),
+																			A2(_elm_lang$core$Basics_ops['++'], 'button is-large', isLoading)),
 																		_1: {
 																			ctor: '::',
 																			_0: _elm_lang$html$Html_Events$onClick(_rajasharan$elm_countdown_problem$Types$Evaluate),
@@ -11147,7 +11185,7 @@ var _rajasharan$elm_countdown_problem$Views$header = function (model) {
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('hero is-primary'),
+			_0: _elm_lang$html$Html_Attributes$class('hero is-primary is-bold'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -11352,38 +11390,54 @@ var _rajasharan$elm_countdown_problem$Views$view = function (model) {
 		});
 };
 
+var _rajasharan$elm_countdown_problem$Main$setError = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			error: (_elm_lang$core$Native_Utils.cmp(
+				_elm_lang$core$List$length(model.results),
+				0) < 1) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'No valid expressions found for target: ',
+				_elm_lang$core$Basics$toString(model.target)) : ''
+		});
+};
 var _rajasharan$elm_countdown_problem$Main$evaluate = function (model) {
-	return A2(
-		_elm_lang$core$List$map,
-		_rajasharan$elm_countdown_problem$Utils$print,
-		A2(
-			_rajasharan$elm_countdown_problem$Utils$solutionsR,
-			{
-				ctor: '::',
-				_0: model.input1,
-				_1: {
-					ctor: '::',
-					_0: model.input2,
-					_1: {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			results: A2(
+				_elm_lang$core$List$map,
+				_rajasharan$elm_countdown_problem$Utils$print,
+				A2(
+					_rajasharan$elm_countdown_problem$Utils$solutionsR,
+					{
 						ctor: '::',
-						_0: model.input3,
+						_0: model.input1,
 						_1: {
 							ctor: '::',
-							_0: model.input4,
+							_0: model.input2,
 							_1: {
 								ctor: '::',
-								_0: model.input5,
+								_0: model.input3,
 								_1: {
 									ctor: '::',
-									_0: model.input6,
-									_1: {ctor: '[]'}
+									_0: model.input4,
+									_1: {
+										ctor: '::',
+										_0: model.input5,
+										_1: {
+											ctor: '::',
+											_0: model.input6,
+											_1: {ctor: '[]'}
+										}
+									}
 								}
 							}
 						}
-					}
-				}
-			},
-			model.target));
+					},
+					model.target))
+		});
 };
 var _rajasharan$elm_countdown_problem$Main$toInt = F2(
 	function (str, $default) {
@@ -11490,11 +11544,8 @@ var _rajasharan$elm_countdown_problem$Main$update = F2(
 			case 'StartLoading':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{
-							result: _rajasharan$elm_countdown_problem$Main$evaluate(model)
-						}),
+					_rajasharan$elm_countdown_problem$Main$setError(
+						_rajasharan$elm_countdown_problem$Main$evaluate(model)),
 					{
 						ctor: '::',
 						_0: A2(
@@ -11525,7 +11576,12 @@ var _rajasharan$elm_countdown_problem$Main$model = {
 	input6: 50,
 	target: 765,
 	isLoading: false,
-	result: {ctor: '[]'}
+	results: {
+		ctor: '::',
+		_0: '',
+		_1: {ctor: '[]'}
+	},
+	error: ''
 };
 var _rajasharan$elm_countdown_problem$Main$init = A2(
 	_elm_lang$core$Platform_Cmd_ops['!'],
