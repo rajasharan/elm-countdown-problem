@@ -13,7 +13,8 @@ type alias Model =
   , input6 : Int
   , target : Int
   , isLoading : Bool
-  , result : List String
+  , results : List String
+  , error : String
   }
 
 type Msg =

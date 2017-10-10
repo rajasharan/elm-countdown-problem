@@ -17,7 +17,7 @@ view model =
 
 header : Model -> Html Msg
 header model =
-  section [class "hero is-primary"]
+  section [class "hero is-primary is-bold"]
     [ div [class "hero-body"]
       [ div [class "container"]
         [ h1 [class "title"] [text "The Countdown Problem"]
@@ -115,7 +115,7 @@ userinput model =
 evaluateSection : Model -> Html Msg
 evaluateSection model =
   let
-      isLoading = if model.isLoading then " is-loading" else ""
+      isLoading = if model.isLoading then " is-loading is-warning" else " is-info"
   in
   section []
     [ div [ class "columns notification" ]
@@ -124,7 +124,7 @@ evaluateSection model =
           [ text "Enter target num " , strong [] [ text "greater than 0 " ] , text "below."
           , div [ class "field has-addons" ]
             [ div [ class "control" ]
-              [ a [ class <| "button is-info is-large" ++ isLoading, onClick Evaluate, disabled model.isLoading ]
+              [ a [ class <| "button is-large" ++ isLoading, onClick Evaluate, disabled model.isLoading ]
                 [ text "Evaluate" ]
               ]
             , div [ class "control" ]
@@ -139,7 +139,14 @@ evaluateSection model =
 
 resultsection : Model -> Html Msg
 resultsection model =
-  section [] <| map precode model.result
+  let
+      results = if String.length model.error > 0 then [errorsection model] else map precode model.results
+  in
+      section [] results
         
 precode : String -> Html Msg
 precode str = pre [] [ code [] [text str] ]
+
+errorsection : Model -> Html Msg
+errorsection model =
+  div [ class "notification is-danger title content" ] [ text model.error ]
